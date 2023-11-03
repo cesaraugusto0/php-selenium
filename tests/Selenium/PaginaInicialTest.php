@@ -2,6 +2,7 @@
 
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\TestCase;
 
 class PaginaInicialTest extends TestCase
@@ -16,6 +17,10 @@ class PaginaInicialTest extends TestCase
         $driver->navigate()->to('http://localhost:8000');
 
         // Assert
-        self::assertStringContainsString('Séries', $driver->getPageSource());
+        $h1Locator = WebDriverBy::tagName('h1');
+        $textoH1= $driver
+            ->findElement($h1Locator)
+            ->getText();
+        self::assertStringContainsString('Séries', $textoH1);
     }
 }
