@@ -3,6 +3,7 @@
 namespace Tests\Selenium;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\TestCase;
@@ -23,12 +24,17 @@ class ResistroTest extends TestCase
         $inputSenha = $driver->findElement(WebDriverBy::id('password'));
 
         $inputNome->sendKeys('Nome Teste');
-        $inputEmail->sendKeys('email@example.com');
+        $inputEmail->sendKeys(md5(time()).'email@example.com');
         $inputSenha->sendKeys('123');
 
-        $inputSenha->sendKeys(WebDriverKeys::ENTER);
+        $inputSenha->submit();
 
         // Assert
+        self::assertSame('http://localhost:8000/series', $driver->getCurrentURL());
+        self::assertinstanceOf(
+            RemoteWebElement::class,
+            $driver->findElement(WebDriverBy::linkText('Sair'))
+        );
     }
 
 }
