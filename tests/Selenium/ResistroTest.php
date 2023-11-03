@@ -5,7 +5,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverKeys;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use PHPUnit\Framework\TestCase;
 
 class ResistroTest extends TestCase
@@ -26,8 +26,11 @@ class ResistroTest extends TestCase
         $inputNome->sendKeys('Nome Teste');
         $inputEmail->sendKeys(md5(time()).'email@example.com');
         $inputSenha->sendKeys('123');
-
         $inputSenha->submit();
+
+        $driver->wait()->until(
+            WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::linkText('Sair'))
+        );
 
         // Assert
         self::assertSame('http://localhost:8000/series', $driver->getCurrentURL());
