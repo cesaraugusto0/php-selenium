@@ -22,5 +22,6 @@ class PaginaInicialTest extends TestCase
             ->findElement($h1Locator)
             ->getText();
         self::assertStringContainsString('Séries', $textoH1);
+        $driver->close();
     }
 }

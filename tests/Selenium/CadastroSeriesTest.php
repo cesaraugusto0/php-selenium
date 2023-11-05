@@ -47,5 +47,6 @@ class CadastroSeriesTest extends TestCase
             'Série com suas respectivas temporadas e episódios adicionada.',
             trim($elementoSucesso->getText())
         );
+        $driver->close();
     }
 }
