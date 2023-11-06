@@ -5,8 +5,8 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverSelect;
 use PHPUnit\Framework\TestCase;
+use Tests\PageObject\PaginaCadastroSeries;
 use Tests\PageObject\PaginaLogin;
 
 class CadastroSeriesTest extends TestCase
@@ -23,27 +23,15 @@ class CadastroSeriesTest extends TestCase
         $paginaLogin->realizaLoginCom('cesar@exemplo.com', '123');
     }
 
-    protected function setUp(): void
-    {
-        self::$driver->get('http://localhost:8000/adicionar-serie');
-        sleep(1);
-    }
-
     public function testCadastrarNovaSeriesDeveRedirecionarParaLista()
     {
         // Act
-        $inputNome = self::$driver->findElement(WebDriverBy::id('nome'));
-        $inputGenero = self::$driver->findElement(WebDriverBy::id('genre'));
-        $inputTemporadas = self::$driver->findElement(WebDriverBy::id('qtd_temporadas'));
-        $inputEpisodios = self::$driver->findElement(WebDriverBy::id('ep_por_temporada'));
-
-        $inputNome->sendKeys('Teste');
-        $selectGenero = new WebDriverSelect($inputGenero);
-        $selectGenero->selectByValue('acao');
-        $inputTemporadas->sendKeys('1');
-        $inputEpisodios->sendKeys('1');
-        $inputEpisodios->submit();
-        sleep(1);   
+        $paginaCadastro = new PaginaCadastroSeries(self::$driver);
+        $paginaCadastro->preencheNome('Teste')
+            ->selecionaGenero('acao')
+            ->comTemporadas(1)
+            ->comEpisodios(1)
+            ->enviarFormulario();
 
         // Assert
         self::assertSame('http://localhost:8000/series', self::$driver->getCurrentURL());

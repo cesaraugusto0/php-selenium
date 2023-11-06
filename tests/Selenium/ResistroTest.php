@@ -6,8 +6,8 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverExpectedCondition;
 use PHPUnit\Framework\TestCase;
+use Tests\PageObject\PaginaCadastroUsuario;
 
 class ResistroTest extends TestCase
 {
@@ -28,18 +28,11 @@ class ResistroTest extends TestCase
     public function testQuandoRegistrarNovoUsuarioDeveRedirecionarParaListaDeSeries()
     {
         // Act
-        $inputNome = self::$driver->findElement(WebDriverBy::id('name'));
-        $inputEmail = self::$driver->findElement(WebDriverBy::id('email'));
-        $inputSenha = self::$driver->findElement(WebDriverBy::id('password'));
-
-        $inputNome->sendKeys('Nome Teste');
-        $inputEmail->sendKeys(md5(time()).'email@example.com');
-        $inputSenha->sendKeys('123');
-        $inputSenha->submit();
-
-        self::$driver->wait()->until(
-            WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::linkText('Sair'))
-        );
+        $paginaCadastro = new PaginaCadastroUsuario(self::$driver);
+        $paginaCadastro->preencheNome('Nome Teste')
+            ->preencheEmail(md5(time()).'email@example.com')
+            ->preencheSenha('123')
+            ->enviarFormulario();
 
         // Assert
         self::assertSame('http://localhost:8000/series', self::$driver->getCurrentURL());

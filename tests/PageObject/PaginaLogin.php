@@ -19,8 +19,9 @@ class PaginaLogin
         $this->driver->findElement(WebDriverBy::id('email'))
             ->sendKeys($email);
         $this->driver->findElement(WebDriverBy::id('password'))
-            ->sendKeys($senha)
-            ->submit();
-        sleep(1);
+            ->sendKeys($senha);
+        $this->driver
+            ->findElement(WebDriverBy::cssSelector('button[type="submit"]'))
+            ->click();
     }
 }
