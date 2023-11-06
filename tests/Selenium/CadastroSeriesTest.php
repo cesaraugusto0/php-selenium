@@ -7,6 +7,7 @@ use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverSelect;
 use PHPUnit\Framework\TestCase;
+use Tests\PageObject\PaginaLogin;
 
 class CadastroSeriesTest extends TestCase
 {
@@ -17,14 +18,9 @@ class CadastroSeriesTest extends TestCase
         // Arrange
         $serverUrl = 'http://localhost:4444';
         self::$driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
-        self::$driver->get('http://localhost:8000/adicionar-serie');
-    
-        self::$driver->findElement(WebDriverBy::id('email'))
-            ->sendKeys('cesar@exemplo.com');
-        self::$driver->findElement(WebDriverBy::id('password'))
-            ->sendKeys('123')
-            ->submit();
-        sleep(1);
+        
+        $paginaLogin = new PaginaLogin(self::$driver);
+        $paginaLogin->realizaLoginCom('cesar@exemplo.com', '123');
     }
 
     protected function setUp(): void
