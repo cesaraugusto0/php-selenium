@@ -10,35 +10,36 @@ use PHPUnit\Framework\TestCase;
 
 class CadastroSeriesTest extends TestCase
 {
-    private WebDriver $driver;
+    private static WebDriver $driver;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         // Arrange
         $serverUrl = 'http://localhost:4444';
-        $this->driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
-        $this->driver->get('http://localhost:8000/adicionar-serie');
-
-        $this->driver->findElement(WebDriverBy::id('email'))
+        self::$driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
+        self::$driver->get('http://localhost:8000/adicionar-serie');
+    
+        self::$driver->findElement(WebDriverBy::id('email'))
             ->sendKeys('cesar@exemplo.com');
-        $this->driver->findElement(WebDriverBy::id('password'))
+        self::$driver->findElement(WebDriverBy::id('password'))
             ->sendKeys('123')
             ->submit();
         sleep(1);
-        $this->driver->get('http://localhost:8000/adicionar-serie');
     }
 
+    protected function setUp(): void
+    {
+        self::$driver->get('http://localhost:8000/adicionar-serie');
+        sleep(1);
+    }
 
     public function testCadastrarNovaSeriesDeveRedirecionarParaLista()
     {
-
-
-        sleep(1);
         // Act
-        $inputNome = $this->driver->findElement(WebDriverBy::id('nome'));
-        $inputGenero = $this->driver->findElement(WebDriverBy::id('genre'));
-        $inputTemporadas = $this->driver->findElement(WebDriverBy::id('qtd_temporadas'));
-        $inputEpisodios = $this->driver->findElement(WebDriverBy::id('ep_por_temporada'));
+        $inputNome = self::$driver->findElement(WebDriverBy::id('nome'));
+        $inputGenero = self::$driver->findElement(WebDriverBy::id('genre'));
+        $inputTemporadas = self::$driver->findElement(WebDriverBy::id('qtd_temporadas'));
+        $inputEpisodios = self::$driver->findElement(WebDriverBy::id('ep_por_temporada'));
 
         $inputNome->sendKeys('Teste');
         $selectGenero = new WebDriverSelect($inputGenero);
@@ -49,16 +50,16 @@ class CadastroSeriesTest extends TestCase
         sleep(1);   
 
         // Assert
-        self::assertSame('http://localhost:8000/series', $this->driver->getCurrentURL());
-        $elementoSucesso = $this->driver->findElement(WebDriverBy::cssSelector('div.alert.alert-success'));
+        self::assertSame('http://localhost:8000/series', self::$driver->getCurrentURL());
+        $elementoSucesso = self::$driver->findElement(WebDriverBy::cssSelector('div.alert.alert-success'));
         self::assertSame(
             'Série com suas respectivas temporadas e episódios adicionada.',
             trim($elementoSucesso->getText())
         );
     }
-    
-    protected function tearDown(): void
+
+    public static function tearDownAfterClass(): void
     {
-        $this->driver->close();
+        self::$driver->close();
     }
 }

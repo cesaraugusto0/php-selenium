@@ -11,43 +11,47 @@ use PHPUnit\Framework\TestCase;
 
 class ResistroTest extends TestCase
 {
-    private WebDriver $driver;
+    private static WebDriver $driver;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         // Arrange
         $serverUrl = 'http://localhost:4444';
-        $this->driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
-        $this->driver->get('http://localhost:8000/novo-usuario');        
+        self::$driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
+    }
+
+    protected function setUp(): void
+    {
+        self::$driver->get('http://localhost:8000/novo-usuario');        
     }
 
     public function testQuandoRegistrarNovoUsuarioDeveRedirecionarParaListaDeSeries()
     {
         // Act
-        $inputNome = $this->driver->findElement(WebDriverBy::id('name'));
-        $inputEmail = $this->driver->findElement(WebDriverBy::id('email'));
-        $inputSenha = $this->driver->findElement(WebDriverBy::id('password'));
+        $inputNome = self::$driver->findElement(WebDriverBy::id('name'));
+        $inputEmail = self::$driver->findElement(WebDriverBy::id('email'));
+        $inputSenha = self::$driver->findElement(WebDriverBy::id('password'));
 
         $inputNome->sendKeys('Nome Teste');
         $inputEmail->sendKeys(md5(time()).'email@example.com');
         $inputSenha->sendKeys('123');
         $inputSenha->submit();
 
-        $this->driver->wait()->until(
+        self::$driver->wait()->until(
             WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::linkText('Sair'))
         );
 
         // Assert
-        self::assertSame('http://localhost:8000/series', $this->driver->getCurrentURL());
+        self::assertSame('http://localhost:8000/series', self::$driver->getCurrentURL());
         self::assertinstanceOf(
             RemoteWebElement::class,
-            $this->driver->findElement(WebDriverBy::linkText('Sair'))
+            self::$driver->findElement(WebDriverBy::linkText('Sair'))
         );
     }
 
-    protected function tearDown(): void
+    public static function tearDownAfterClass(): void
     {
-        $this->driver->close();
+        self::$driver->close();
     }
 
 }

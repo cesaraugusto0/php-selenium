@@ -8,30 +8,30 @@ use PHPUnit\Framework\TestCase;
 
 class PaginaInicialTest extends TestCase
 {
-    private WebDriver $driver;
+    private static WebDriver $driver;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         // Arange
         $serverUrl = 'http://localhost:4444';
-        $this->driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
+        self::$driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
     }
 
     public function testPaginaInicialNaoLogadaDeveSerListagemDeSeries()
     {
         // Act
-        $this->driver->navigate()->to('http://localhost:8000');
+        self::$driver->navigate()->to('http://localhost:8000');
 
         // Assert
         $h1Locator = WebDriverBy::tagName('h1');
-        $textoH1= $this->driver
+        $textoH1= self::$driver
             ->findElement($h1Locator)
             ->getText();
         self::assertStringContainsString('Séries', $textoH1);
     }
     
-    protected function tearDown(): void
+    public static function tearDownAfterClass(): void
     {
-        $this->driver->close();
+        self::$driver->close();
     }
 }
