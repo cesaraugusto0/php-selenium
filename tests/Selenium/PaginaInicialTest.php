@@ -5,6 +5,7 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\TestCase;
+use Tests\PageObject\PaginaListagemSeries;
 
 class PaginaInicialTest extends TestCase
 {
@@ -20,14 +21,11 @@ class PaginaInicialTest extends TestCase
     public function testPaginaInicialNaoLogadaDeveSerListagemDeSeries()
     {
         // Act
-        self::$driver->navigate()->to('http://localhost:8000');
+        self::$driver->get('http://localhost:8000');
+        $paginaListagem = new PaginaListagemSeries(self::$driver);
 
         // Assert
-        $h1Locator = WebDriverBy::tagName('h1');
-        $textoH1= self::$driver
-            ->findElement($h1Locator)
-            ->getText();
-        self::assertStringContainsString('Séries', $textoH1);
+        self::assertSame('Séries', $paginaListagem->titulo());
     }
     
     public static function tearDownAfterClass(): void
