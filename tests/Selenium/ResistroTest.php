@@ -4,41 +4,50 @@ namespace Tests\Selenium;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use PHPUnit\Framework\TestCase;
 
 class ResistroTest extends TestCase
 {
-    public function testQuandoRegistrarNovoUsuarioDeveRedirecionarParaListaDeSeries()
+    private WebDriver $driver;
+
+    protected function setUp(): void
     {
         // Arrange
         $serverUrl = 'http://localhost:4444';
-        $driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
-        $driver->get('http://localhost:8000/novo-usuario');
+        $this->driver = RemoteWebDriver::create($serverUrl, DesiredCapabilities::firefox());
+        $this->driver->get('http://localhost:8000/novo-usuario');        
+    }
 
-
+    public function testQuandoRegistrarNovoUsuarioDeveRedirecionarParaListaDeSeries()
+    {
         // Act
-        $inputNome = $driver->findElement(WebDriverBy::id('name'));
-        $inputEmail = $driver->findElement(WebDriverBy::id('email'));
-        $inputSenha = $driver->findElement(WebDriverBy::id('password'));
+        $inputNome = $this->driver->findElement(WebDriverBy::id('name'));
+        $inputEmail = $this->driver->findElement(WebDriverBy::id('email'));
+        $inputSenha = $this->driver->findElement(WebDriverBy::id('password'));
 
         $inputNome->sendKeys('Nome Teste');
         $inputEmail->sendKeys(md5(time()).'email@example.com');
         $inputSenha->sendKeys('123');
         $inputSenha->submit();
 
-        $driver->wait()->until(
+        $this->driver->wait()->until(
             WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::linkText('Sair'))
         );
 
         // Assert
-        self::assertSame('http://localhost:8000/series', $driver->getCurrentURL());
+        self::assertSame('http://localhost:8000/series', $this->driver->getCurrentURL());
         self::assertinstanceOf(
             RemoteWebElement::class,
-            $driver->findElement(WebDriverBy::linkText('Sair'))
+            $this->driver->findElement(WebDriverBy::linkText('Sair'))
         );
-        $driver->close();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->driver->close();
     }
 
 }
