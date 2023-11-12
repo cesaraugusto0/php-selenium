@@ -1,0 +1,29 @@
+
+Funcionalidade: Acessar site de Controle de séries
+Como visitante
+Quero poder acessar o site de Controle de Séries
+Para ver as séries disponíveis
+
+    Cenário:
+        Dado que estou com o navegador aberto
+        Quando visito "http://localhost:8000"
+        Então eu vejo que o título da página contem a palavra "Séries"
+
+
+
+
+
+******************************************************************************
+
+
+Funcionalidade: Registro de usuários
+Como visitante
+Quero poder me registrar
+Para poder controlar minhas séries
+
+    Cenário:
+        Dado que estou com o navegador aberto
+        E estou em "http://localhost:8000/novo-usuario"
+        E envio esse formulário
+        Então eu devo ser redirecionado para página de lista de séries
+        E ver o link "Sair"
