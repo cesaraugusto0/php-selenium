@@ -24,6 +24,26 @@ Para poder controlar minhas séries
     Cenário:
         Dado que estou com o navegador aberto
         E estou em "http://localhost:8000/novo-usuario"
-        E envio esse formulário
+        E envio esse formulário com dados válidos
+        Então eu devo ser redirecionado para página de lista de séries
+        E ver o link "Sair"
+
+
+
+
+
+
+******************************************************************************
+
+
+Funcionalidade: Login de usuários
+Como usuario
+Quero poder logar no sistema
+Para poder controlar minhas séries
+
+    Cenário:
+        Dado que estou com o navegador aberto
+        E estou em "http://localhost:8000/entrar"
+        E envio esse formulário com dados válidos
         Então eu devo ser redirecionado para página de lista de séries
         E ver o link "Sair"
